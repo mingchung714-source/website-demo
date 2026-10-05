@@ -1,0 +1,22 @@
+# Workflow name
+name: Run simple test
+
+# 觸發條件: 當 main 分支有 push 時自動執行
+on:
+  push:
+    branches: [ main ]
+
+# Jobs 區塊
+jobs:
+  test:                     # 這個工作的名稱叫 "test"
+    runs-on: ubuntu-latest  # 在 GitHub 提供的 Ubuntu 虛擬環境中執行
+
+    steps:
+      # 第一步: 把這個 Repository 的 檔案取出 (checkout)
+      - name: checkout repository
+        uses: actions/checkout@v3 # 這是 GitHub 官方提供的動作 (Action)
+
+      # 第二步: 執行一個簡單的命令
+      - name: Run a simple script
+        run: echo "Hello Github Actions!"
+        # 這行指令會在虛擬機器上印出一段訊息
