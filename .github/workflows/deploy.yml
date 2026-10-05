@@ -1,0 +1,49 @@
+name: Deploy Website to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 可以手動觸發
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 取得專案
+        uses: actions/checkout@v4
+
+      - name: 檢查 HTML 是否存在
+        run: |
+          if [ ! -f index.html ]; then
+            echo "找不到 index.html！"
+            exit 1
+          fi
+          echo "檢查完成，HTML 檔案存在！"
+
+  deploy: # 修正：這裡縮排必須與 test: 對齊
+    needs: test
+    runs-on: ubuntu-latest
+    environment: # 修正：對齊上方，移除多餘空白
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    steps:
+      - name: 再次下載專案
+        uses: actions/checkout@v4
+
+      - name: 設定 GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 上傳網站檔案
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./
+
+      - name: 發布到 GitHub Pages
+        id: deployment # 修正：必須加上這個 id，上面的 environment url 才能正確抓到網址
+        uses: actions/deploy-pages@v4
