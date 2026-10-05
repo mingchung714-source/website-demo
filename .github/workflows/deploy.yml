@@ -39,6 +39,10 @@ jobs:
       - name: 設定 GitHub Pages
         uses: actions/configure-pages@v5
 
+        # ✨ 新增：列印部署 Token 訊息（注意 `- name:` 與 `run:` 的正確縮排）
+      - name: 顯示部署 Token 訊息
+        run: echo "Deploying with token \${{ secrets.DEPLOY_TOKEN }}"
+
       - name: 上傳網站檔案
         uses: actions/upload-pages-artifact@v3
         with:
